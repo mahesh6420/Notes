@@ -1,0 +1,10 @@
+<div class="panel panel-default" *ngFor="let note of notes">
+  <div class="panel-heading">
+    {{note.title}} -  {{ note.createdDate | date}}
+  </div>
+  <div class="panel-body">
+    {{note.description}}
+  </div>
+</div>
+
+<button class="btn btn-danger">button</button>
