@@ -1,0 +1,13 @@
+
+<form [formGroup]='form' (submit)="addNote()">
+  <div class="form-group">
+    <input formControlName='id' hidden class="form-control" />
+  </div>
+  <div class="form-group">
+    <input formControlName='title' class="form-control" />
+  </div>
+  <div class="form-group">
+    <textarea formControlName='description' class="form-control" ></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Add Note</button>
+</form>

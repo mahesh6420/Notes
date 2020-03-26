@@ -1,10 +1,14 @@
+using Notes.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Notes.Data;
+using Notes.Services;
 
 namespace Notes
 {
@@ -21,11 +25,18 @@ namespace Notes
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<ApplicationDbContext>( options =>
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+            );
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddTransient<INoteRepository, NoteRepository>();
+            services.AddTransient<INoteService, NoteService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

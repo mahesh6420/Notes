@@ -1,3 +1,4 @@
+<note-form></note-form>
 <div class="panel panel-default" *ngFor="let note of notes">
   <div class="panel-heading">
     {{note.title}} -  {{ note.createdDate | date}}
@@ -5,6 +6,8 @@
   <div class="panel-body">
     {{note.description}}
   </div>
+  <div class="panel-footer">
+    <a class="btn btn-warning" (click)="editNote(note)"> Edit </a>
+    <a class="btn btn-danger" (click)="deleteNote(note)"> Delete </a>
+  </div>
 </div>
-
-<button class="btn btn-danger">button</button>

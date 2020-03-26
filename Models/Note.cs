@@ -1,6 +1,6 @@
 using System;
 
-namespace Notes.Model
+namespace Notes.Models
 {
     public class Note
     {

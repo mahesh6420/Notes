@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/service/data.service';
 import { Note } from 'src/interface/note';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector : 'note',
@@ -9,12 +10,28 @@ import { Note } from 'src/interface/note';
 
 export class NoteComponent implements OnInit {
   notes: any;
-  constructor(private dataService: DataService) {
-    dataService.controllerName = 'note';
+  form = new FormGroup({
+    id: new FormControl(''),
+    title: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required)
+  });
+
+  constructor(private _dataService: DataService<Note>) {
+    _dataService.controllerName = 'note';
   }
 
   ngOnInit(): void {
-    this.dataService.getAll().subscribe(res => {console.log(res); return this.notes = res;});
+    this._dataService.getAll().subscribe(res => {console.log(res); return this.notes = res;});
+  }
+
+  createNote(note: Note) {
+    this._dataService.create(note);
+  }
+
+  editNote(note: Note) {
+  }
+
+  deleteNote(note: Note) {
 
   }
 }
