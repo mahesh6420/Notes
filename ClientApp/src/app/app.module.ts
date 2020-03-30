@@ -31,7 +31,7 @@ import { NoteFormComponent } from './note/note-form/note-form.component';
       { path: '', component: NoteComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'note', component: NoteComponent },
+      { path: 'notes', component: NoteComponent },
     ])
   ],
   providers: [],

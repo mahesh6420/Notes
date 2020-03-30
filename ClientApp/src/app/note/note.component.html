@@ -1,4 +1,6 @@
-<note-form></note-form>
+<note-form (note)="addNote($event)"></note-form>
+
+<div *ngIf="!notes">loading notes...</div>
 <div class="panel panel-default" *ngFor="let note of notes">
   <div class="panel-heading">
     {{note.title}} -  {{ note.createdDate | date}}

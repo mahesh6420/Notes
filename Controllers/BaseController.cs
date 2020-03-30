@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Notes.Services;
+using Notes.Models;
 
 namespace Notes.Controllers
 {
@@ -17,6 +18,18 @@ namespace Notes.Controllers
 
         [HttpGet]
         public virtual async Task<IReadOnlyList<T>> Get()
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public virtual async Task<DataResult<T>> Create(T model)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpDelete]
+        public virtual async Task<DataResult> Delete(int id)
         {
             throw new NotImplementedException();
         }

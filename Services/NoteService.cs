@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Blog.Models;
+using Notes.Models;
 using Microsoft.EntityFrameworkCore;
 using Notes.Common.Enums;
 using Notes.Models;
@@ -11,13 +11,14 @@ namespace Notes.Services
 {
     public class NoteService : INoteService
     {
+        DataResult _result = new DataResult();
         private readonly INoteRepository _repository;
         public NoteService(INoteRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<DataResult> Create(Note viewModel)
+        public async Task<DataResult<Note>> Create(Note viewModel)
         {
             viewModel.CreatedDate = DateTime.Now;
             viewModel.UpdatedDate = DateTime.Now;
@@ -29,7 +30,13 @@ namespace Notes.Services
         {
             Note note = await _repository.GetById<Note,int>(id);
 
-            if(note == null) return new DataResult { Status = Status.Failed, Message = "Doesn't Exist."};
+            if(note == null) 
+            {
+                _result.Status = Status.Failed;
+                _result.Message = "Doesn't Exist.";
+
+                return _result;
+            }
 
             return await _repository.Delete(note);
         }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/service/data.service';
 import { Note } from 'src/interface/note';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { ResultStatus } from 'src/common/enum/result-status';
 
 @Component({
   selector : 'note',
@@ -10,28 +11,29 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 
 export class NoteComponent implements OnInit {
   notes: any;
-  form = new FormGroup({
-    id: new FormControl(''),
-    title: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required)
-  });
 
   constructor(private _dataService: DataService<Note>) {
     _dataService.controllerName = 'note';
   }
 
   ngOnInit(): void {
-    this._dataService.getAll().subscribe(res => {console.log(res); return this.notes = res;});
+    this._dataService.getAll()
+    .subscribe(res => this.notes = res);
   }
 
-  createNote(note: Note) {
-    this._dataService.create(note);
+  addNote(note: Note) {
+    this.notes.splice(0, 0, note);
   }
 
   editNote(note: Note) {
   }
 
   deleteNote(note: Note) {
-
+    this._dataService.delete(note).subscribe((res) => {
+      if(res.status === ResultStatus.Success) {
+        const index = this.notes.indexOf(note);
+        this.notes.splice(index, 1);
+      }
+    });
   }
 }

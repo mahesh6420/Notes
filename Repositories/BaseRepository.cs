@@ -1,4 +1,4 @@
-using Blog.Models;
+using Notes.Models;
 using Notes.Common.Enums;
 using Notes.Data;
 using Notes.Repositories;
@@ -19,7 +19,7 @@ namespace Notes.Repositories
             _context = context;
         }
 
-        public async Task<DataResult> Create<T>(T model) where T : class
+        public async Task<DataResult<T>> Create<T>(T model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -29,37 +29,38 @@ namespace Notes.Repositories
                     var b = await _context.SaveChangesAsync();
                     _transaction.Commit();
 
-                    return new DataResult
+                    return new DataResult<T>
                     {
                         Status = Status.Success,
                         Message = "Saved Successfully",
-                        ReturnId = (string)model.GetType().GetProperty("Id").GetValue(model, null)
+                        Data = model
                     };
                 }
                 catch (DbException ex)
                 {
                     _transaction.Rollback();
 
-                    return new DataResult
+                    return new DataResult<T>
                     {
                         Status = Status.Failed,
-                        Message = $"Save failed, {ex.Message}"
+                        Message = $"Save failed, {ex.Message}",
+                        Data = null
                     };
                 }
                 catch (Exception ex)
                 {
                     _transaction.Rollback();
 
-                    return new DataResult
+                    return new DataResult<T>
                     {
                         Status = Status.Exception,
-                        Message = $"Save failed, {ex.Message}"
-                    };
+                        Message = $"Save failed, {ex.Message}",
+                        Data = null                    };
                 }
             }
         }
 
-        public async Task<DataResult> CreateBatch<T>(List<T> model) where T : class
+        public async Task<DataResult> CreateBatch<T>(List<T> model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -99,7 +100,7 @@ namespace Notes.Repositories
             }
         }
 
-        public async Task<DataResult> Delete<T>(T model) where T : class
+        public async Task<DataResult> Delete<T>(T model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -113,7 +114,6 @@ namespace Notes.Repositories
                     {
                         Status = Status.Success,
                         Message = "Deleted Successfully",
-                        ReturnId = model.GetType().GetProperty("Id").ToString()
                     };
                 }
                 catch (DbException ex)
@@ -139,7 +139,7 @@ namespace Notes.Repositories
             }
         }
 
-        public async Task<DataResult> DeleteBatch<T>(List<T> model) where T : class
+        public async Task<DataResult> DeleteBatch<T>(List<T> model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -178,7 +178,7 @@ namespace Notes.Repositories
             }
         }
 
-        public async Task<DataResult> Update<T>(T model) where T : class
+        public async Task<DataResult> Update<T>(T model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -218,7 +218,7 @@ namespace Notes.Repositories
             }
         }
 
-        public async Task<DataResult> UpdateBatch<T>(List<T> model) where T : class
+        public async Task<DataResult> UpdateBatch<T>(List<T> model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -258,24 +258,24 @@ namespace Notes.Repositories
             }
         }
 
-        public IEnumerable<T> GetAll<T>() where T : class
+        public IEnumerable<T> GetAll<T>() where T : BaseModel
         {
-            return _context.Set<T>();
+            return _context.Set<T>().OrderByDescending(x => x.CreatedDate);;
         }
 
-        public IQueryable<T> GetAllAsync<T>() where T : class
+        public IQueryable<T> GetAllAsync<T>() where T : BaseModel
         {
-            return _context.Set<T>();
+            return _context.Set<T>().OrderByDescending(x => x.CreatedDate);
         }
 
-        public async Task<T> GetById<T, TKey>(TKey key) where T : class
+        public async Task<T> GetById<T, TKey>(TKey key) where T : BaseModel
         {
             return await _context.Set<T>().FindAsync(key);
         }
 
         public async Task<DataResult> DeleteUpdate<TDelete, TUpdate>(TDelete dModel, TUpdate uModel)
-            where TDelete : class
-            where TUpdate : class
+            where TDelete : BaseModel
+            where TUpdate : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -318,8 +318,8 @@ namespace Notes.Repositories
         }
 
         public async Task<DataResult> DeleteSave<TDelete, TSave>(TDelete dModel, TSave sModel)
-            where TDelete : class
-            where TSave : class
+            where TDelete : BaseModel
+            where TSave : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -363,8 +363,8 @@ namespace Notes.Repositories
         }
 
         public async Task<DataResult> DeleteBatchUpdate<TDelete, TUpdate>(List<TDelete> dModel, TUpdate uModel)
-            where TDelete : class
-            where TUpdate : class
+            where TDelete : BaseModel
+            where TUpdate : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -408,8 +408,8 @@ namespace Notes.Repositories
         }
 
         public async Task<DataResult> DeleteBatchSave<TDelete, TSave>(List<TDelete> dModel, TSave sModel)
-            where TDelete : class
-            where TSave : class
+            where TDelete : BaseModel
+            where TSave : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {

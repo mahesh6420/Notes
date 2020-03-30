@@ -1,6 +1,6 @@
 using Notes.Common.Enums;
 
-namespace Blog.Models
+namespace Notes.Models
 {
     public class DataResult
     {

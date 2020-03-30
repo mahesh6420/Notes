@@ -9,7 +9,7 @@ using Notes.Services;
 namespace Notes.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class NoteController : BaseController<Note, INoteService>
     {
         private readonly INoteService _noteService;
@@ -22,17 +22,18 @@ namespace Notes.Controllers
         public async override Task<IReadOnlyList<Note>> Get()
         {
             return await _noteService.GetAll();
+        }
+        
+        [HttpPost]
+        public async override Task<DataResult<Note>> Create(Note model)
+        {
+          return await _noteService.Create(model);
+        }
 
-            // var rng = new Random();
-            // return Enumerable.Range(1, 5).Select(index => new Note
-            // {
-            //     Id = rng.Next(1,10),
-            //     Title = "asdfas",
-            //     Description = "asdfaasdf sd fa sdfa asdf sadf asdf asdf asdfasdfasd fasdf asdf asdf",
-            //     CreatedDate = DateTime.Now,
-            //     UpdatedDate = DateTime.Now
-            // })
-            // .ToList();
+         [HttpDelete("{id}")]
+        public async override Task<DataResult> Delete(int id)
+        {
+            return await _noteService.Delete(id);
         }
     }
 }
