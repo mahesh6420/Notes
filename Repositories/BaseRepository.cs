@@ -178,7 +178,7 @@ namespace Notes.Repositories
             }
         }
 
-        public async Task<DataResult> Update<T>(T model) where T : BaseModel
+        public async Task<DataResult<T>> Update<T>(T model) where T : BaseModel
         {
             using (var _transaction = _context.Database.BeginTransaction())
             {
@@ -188,18 +188,18 @@ namespace Notes.Repositories
                     await _context.SaveChangesAsync();
                     _transaction.Commit();
 
-                    return new DataResult
+                    return new DataResult<T>
                     {
                         Status = Status.Success,
                         Message = "Updated Successfully",
-                        ReturnId = model.GetType().GetProperty("Id").ToString()
+                        Data = model
                     };
                 }
                 catch (DbException ex)
                 {
                     _transaction.Rollback();
 
-                    return new DataResult
+                    return new DataResult<T>
                     {
                         Status = Status.Failed,
                         Message = $"Update failed, {ex.Message}"
@@ -209,7 +209,7 @@ namespace Notes.Repositories
                 {
                     _transaction.Rollback();
 
-                    return new DataResult
+                    return new DataResult<T>
                     {
                         Status = Status.Exception,
                         Message = $"Update failed, {ex.Message}"

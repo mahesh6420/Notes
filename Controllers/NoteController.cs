@@ -30,10 +30,16 @@ namespace Notes.Controllers
           return await _noteService.Create(model);
         }
 
-         [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async override Task<DataResult> Delete(int id)
         {
             return await _noteService.Delete(id);
+        }
+
+        [HttpPatch]
+        public async override Task<DataResult<Note>> Update(Note model)
+        {
+            return await _noteService.Update(model);
         }
     }
 }

@@ -8,5 +8,7 @@
   <div class="form-group">
     <textarea formControlName='description' class="form-control" ></textarea>
   </div>
-  <button type="submit" class="btn btn-primary">Add Note</button>
+  <button type="submit" class="btn btn-primary"  *ngIf="!editNote">Add Note</button>
+  <button type="submit" class="btn btn-info" *ngIf="editNote">Update Note</button>
+  <button class="btn btn-danger" *ngIf="editNote" (click)="cancelUpdate()">Cancel</button>
 </form>

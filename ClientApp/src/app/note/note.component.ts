@@ -11,7 +11,8 @@ import { ResultStatus } from 'src/common/enum/result-status';
 
 export class NoteComponent implements OnInit {
   notes: any;
-
+  selectedNote: Note;
+  updateNote: boolean = false;
   constructor(private _dataService: DataService<Note>) {
     _dataService.controllerName = 'note';
   }
@@ -26,6 +27,7 @@ export class NoteComponent implements OnInit {
   }
 
   editNote(note: Note) {
+    this.selectedNote = note;
   }
 
   deleteNote(note: Note) {
@@ -35,5 +37,13 @@ export class NoteComponent implements OnInit {
         this.notes.splice(index, 1);
       }
     });
+  }
+
+  removeSelectedNote(event) {
+    this.selectedNote = null;
+  }
+  updateUpdatedNote(note: Note) {
+    const selectedNote = this.notes.indexOf(this.selectedNote);
+    this.notes.splice(selectedNote, 1, note);
   }
 }

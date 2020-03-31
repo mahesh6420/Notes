@@ -1,4 +1,7 @@
-<note-form (note)="addNote($event)"></note-form>
+<note-form [editNote]="selectedNote"
+(removeSelectedNote)="removeSelectedNote($event)"
+(updateUpdatedNote)="updateUpdatedNote($event)"
+(note)="addNote($event)"></note-form>
 
 <div *ngIf="!notes">loading notes...</div>
 <div class="panel panel-default" *ngFor="let note of notes">
@@ -9,7 +12,7 @@
     {{note.description}}
   </div>
   <div class="panel-footer">
-    <a class="btn btn-warning" (click)="editNote(note)"> Edit </a>
-    <a class="btn btn-danger" (click)="deleteNote(note)"> Delete </a>
+    <a class="btn btn-warning" (click)="editNote(note)" > Edit </a>
+    <button type="button" class="btn btn-danger" [disabled]="selectedNote" (click)="deleteNote(note)"> Delete </button>
   </div>
 </div>

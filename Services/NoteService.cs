@@ -51,11 +51,25 @@ namespace Notes.Services
             return await _repository.GetById<Note, int>(key);
         }
 
-        public async Task<DataResult> Update(Note viewModel)
+        public async Task<DataResult<Note>> Update(Note viewModel)
         {
-            viewModel.UpdatedDate = DateTime.Now;
+            var result = new DataResult<Note>();
+            Note note = await _repository.GetById<Note,int>(viewModel.Id);
 
-            return await _repository.Update(viewModel);
+            if(note == null) 
+            {
+                result.Status = Status.Failed;
+                result.Message = "Doesn't Exist.";
+
+                return result;
+            }
+
+
+            note.Title = viewModel.Title;
+            note.Description = viewModel.Description;
+            note.UpdatedDate = DateTime.Now;
+            
+            return await _repository.Update(note);
         }
     }
 }

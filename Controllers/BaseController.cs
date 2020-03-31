@@ -33,5 +33,11 @@ namespace Notes.Controllers
         {
             throw new NotImplementedException();
         }
+
+        [HttpPatch]
+        public virtual async  Task<DataResult<T>> Update(Note model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

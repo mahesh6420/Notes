@@ -8,7 +8,7 @@ namespace Notes.Repositories
     public interface IBaseRepository
     {
         Task<DataResult<T>> Create<T>(T model) where T : BaseModel;
-        Task<DataResult> Update<T>(T model) where T : BaseModel;
+        Task<DataResult<T>> Update<T>(T model) where T : BaseModel;
         Task<DataResult> Delete<T>(T model) where T : BaseModel;
 
         Task<DataResult> CreateBatch<T>(List<T> model) where T : BaseModel;
