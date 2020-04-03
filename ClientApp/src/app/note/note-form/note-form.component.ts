@@ -18,7 +18,8 @@ export class NoteFormComponent implements OnChanges {
   form = new FormGroup({
     id: new FormControl(0),
     title: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required)
+    description: new FormControl('', [Validators.required])
+    // description: new FormControl('', [Validators.required, Validators.minLength(50)])
   });
 
   constructor(private _dateService: DataService<Note>) {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Notes.Models;
 using Notes.Services;
+using Notes.ViewModels;
 
 namespace Notes.Controllers
 {
@@ -17,13 +18,19 @@ namespace Notes.Controllers
         {
             _noteService = noteService;
         }
-        
-        [HttpGet]
-        public async override Task<IReadOnlyList<Note>> Get()
+
+        [HttpGet("totalCount")]
+        public async override Task<int> Get()
         {
-            return await _noteService.GetAll();
+            return await _noteService.GetTotalCount();
         }
-        
+
+        [HttpGet]
+        public async override Task<IReadOnlyList<Note>> Get([FromQuery]QueryParamViewModel queryParam)
+        {
+            return await _noteService.GetAll(queryParam);
+        }
+
         [HttpPost]
         public async override Task<DataResult<Note>> Create(Note model)
         {

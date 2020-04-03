@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Notes.Common.Enums;
 using Notes.Models;
 using Notes.Repositories;
+using System.Linq;
+using Notes.ViewModels;
 
 namespace Notes.Services
 {
@@ -41,16 +43,26 @@ namespace Notes.Services
             return await _repository.Delete(note);
         }
 
-        public async Task<IReadOnlyList<Note>> GetAll()
+        public async Task<IReadOnlyList<Note>> GetAll(QueryParamViewModel queryParam)
         {
-            return await _repository.GetAllAsync<Note>().ToListAsync();
+            queryParam.SearchText = queryParam.SearchText ?? "";
+
+            return await _repository.GetAllAsync<Note>()
+            .Where(x => x.Title.Contains(queryParam.SearchText) || x.Description.Contains(queryParam.SearchText))
+            .Skip(queryParam.Skip)
+            .Take(queryParam.Take)
+            .ToListAsync();
         }
 
         public async Task<Note> GetById(int key)
         {
             return await _repository.GetById<Note, int>(key);
         }
-
+        
+        public async Task<int> GetTotalCount()
+        {
+            return await _repository.GetAllAsync<Note>().CountAsync();
+        }
         public async Task<DataResult<Note>> Update(Note viewModel)
         {
             var result = new DataResult<Note>();

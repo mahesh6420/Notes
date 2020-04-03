@@ -3,16 +3,44 @@
 (updateUpdatedNote)="updateUpdatedNote($event)"
 (note)="addNote($event)"></note-form>
 
-<div *ngIf="!notes">loading notes...</div>
-<div class="panel panel-default" *ngFor="let note of notes">
-  <div class="panel-heading">
-    {{note.title}} -  {{ note.createdDate | date}}
+<div *ngIf="!notes;then loading;else notelist"></div>
+
+<ng-template #loading>
+  loading notes...
+</ng-template>
+<ng-template #notelist>
+  <input [formControl]="searchText" (change)="paginate(1,showResult.value, searchText.value)" />
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+      <span class="mr-4" style="line-height: 4vh;">
+        Showing {{(queryParam.pageNo -1) * queryParam.take + 1}} - {{queryParam.pageNo * queryParam.take < totalCount ? queryParam.pageNo * queryParam.take : totalCount}} out of {{totalCount}} Results
+      </span>
+      <select [formControl]="showResult" (change)="paginate(1, showResult.value)" >
+        <option value="10" selected> 10 </option>
+        <option value="25"> 25 </option>
+        <option value="50"> 50 </option>
+      </select>
+      <li class="page-item" [class.disabled]="queryParam.pageNo == 1">
+        <a class="page-link" href="#" tabindex="-1" (click)="paginate(queryParam.pageNo - 1)">Previous</a>
+      </li>
+     <li class="page-item" [class.active]="pageNo == queryParam.pageNo" *ngFor="let pageNo of totalPageNo">
+        <a class="page-link" href="#" (click)="paginate(pageNo)" > {{pageNo}} </a>
+     </li>
+      <li class="page-item" [class.disabled]="queryParam.pageNo*queryParam.take >= totalCount">
+        <a class="page-link" href="#" (click)="paginate(queryParam.pageNo + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="panel panel-default" *ngFor="let note of notes">
+    <div class="panel-heading">
+        {{note.title}} -  {{ note.createdDate | date}}
+    </div>
+    <div class="panel-body">
+      {{note.description}}
+    </div>
+    <div class="panel-footer">
+      <a class="btn btn-warning" (click)="editNote(note)" > Edit </a>
+      <button type="button" class="btn btn-danger" [disabled]="selectedNote" (click)="deleteNote(note)"> Delete </button>
+    </div>
   </div>
-  <div class="panel-body">
-    {{note.description}}
-  </div>
-  <div class="panel-footer">
-    <a class="btn btn-warning" (click)="editNote(note)" > Edit </a>
-    <button type="button" class="btn btn-danger" [disabled]="selectedNote" (click)="deleteNote(note)"> Delete </button>
-  </div>
-</div>
+</ng-template>

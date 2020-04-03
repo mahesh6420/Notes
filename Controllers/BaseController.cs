@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Notes.Services;
 using Notes.Models;
+using Notes.ViewModels;
 
 namespace Notes.Controllers
 {
@@ -16,8 +17,14 @@ namespace Notes.Controllers
             _service = service;
         }
 
+        [HttpGet("totalCount")]
+        public virtual async Task<int> Get()
+        {
+            throw new NotImplementedException();
+        } 
+
         [HttpGet]
-        public virtual async Task<IReadOnlyList<T>> Get()
+        public virtual async Task<IReadOnlyList<T>> Get(QueryParamViewModel pagination)
         {
             throw new NotImplementedException();
         }

@@ -5,7 +5,7 @@ using Notes.Models;
 
 namespace Notes.Services
 {
-    public interface INoteService: IBaseService<Note, Note, int>
+    public interface INoteService : IBaseService<Note, Note, int>
     {
     }
 }
